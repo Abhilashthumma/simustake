@@ -26,7 +26,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",               # local dev
         "https://simustake.vercel.app",        # ← replace with your Vercel URL
-        "https://simustake-api.onrender.com",  # ← replace with your Render URL
+        "https://simustake.onrender.com",  # ← replace with your Render URL
     ],
     allow_methods=["*"],
     allow_headers=["*"],
