@@ -1,5 +1,5 @@
 langgraph==0.2.50
-langchain-core==0.3.28
+langchain-core==0.3.30
 langchain-groq==0.2.3
 groq==0.13.1
 python-dotenv==1.0.1
