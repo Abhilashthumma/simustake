@@ -1,33 +1,53 @@
-
 "use client";
 import type { Persona } from "@/types";
 
-const ACTION_STYLE: Record<string, string> = {
-  churn:         "bg-red-900/40 text-red-300 border-red-800",
-  upgrade:       "bg-green-900/40 text-green-300 border-green-800",
-  post_negative: "bg-orange-900/40 text-orange-300 border-orange-800",
-  post_positive: "bg-blue-900/40 text-blue-300 border-blue-800",
-  wait:          "bg-gray-800 text-gray-400 border-gray-700",
+const ACTION_CONFIG: Record<string, { color: string; bg: string; border: string; icon: string; label: string }> = {
+  churn:         { color: "text-red-400",     bg: "bg-red-950/40",    border: "border-red-800/50",    icon: "→", label: "churned"       },
+  upgrade:       { color: "text-emerald-400", bg: "bg-emerald-950/40",border: "border-emerald-800/50",icon: "↑", label: "upgraded"      },
+  post_negative: { color: "text-orange-400",  bg: "bg-orange-950/40", border: "border-orange-800/50", icon: "!", label: "posted negative"},
+  post_positive: { color: "text-blue-400",    bg: "bg-blue-950/40",   border: "border-blue-800/50",   icon: "✓", label: "posted positive"},
+  wait:          { color: "text-gray-400",    bg: "bg-white/[0.02]",  border: "border-white/10",      icon: "…", label: "waiting"       },
 };
 
-const ACTION_ICON: Record<string, string> = {
-  churn: "💨", upgrade: "⬆️", post_negative: "📢",
-  post_positive: "👍", wait: "⏳",
+const ARCHETYPE_INITIALS: Record<string, string> = {
+  power_user:        "PU",
+  casual_user:       "CU",
+  enterprise_buyer:  "EB",
+  churned_user:      "CH",
+  competitor_analyst:"CA",
+  investor:          "IN",
+  internal_skeptic:  "IS",
 };
 
 export default function PersonaCard({ persona: p }: { persona: Persona }) {
-  const style = ACTION_STYLE[p.chosen_action] ?? ACTION_STYLE.wait;
-  const icon  = ACTION_ICON[p.chosen_action]  ?? "❓";
+  const cfg      = ACTION_CONFIG[p.chosen_action] ?? ACTION_CONFIG.wait;
+  const initials = ARCHETYPE_INITIALS[p.archetype] ?? p.archetype.slice(0, 2).toUpperCase();
+
   return (
-    <div className={`border rounded-xl p-3 space-y-2 ${style}`}>
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold">{p.name}</span>
-        <span className="text-lg">{icon}</span>
+    <div className={`rounded-xl border ${cfg.border} ${cfg.bg} p-3.5 space-y-3`}>
+      {/* avatar + name */}
+      <div className="flex items-center gap-2.5">
+        <div className={`w-8 h-8 rounded-lg flex items-center justify-center
+                         text-xs font-semibold shrink-0 ${cfg.bg} border ${cfg.border} ${cfg.color}`}>
+          {initials}
+        </div>
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-gray-200 truncate">{p.name}</p>
+          <p className="text-xs text-gray-600 truncate">{p.archetype.replace(/_/g, " ")}</p>
+        </div>
       </div>
-      <p className="text-xs opacity-70">{p.archetype.replace(/_/g, " ")}</p>
-      <p className="text-xs opacity-60 italic">{p.emotional_baseline}</p>
-      <p className="text-xs font-mono">{p.chosen_action}</p>
+
+      {/* divider */}
+      <div className="border-t border-white/5" />
+
+      {/* mood + action */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-gray-500 italic">{p.emotional_baseline}</span>
+        <span className={`flex items-center gap-1 text-xs font-mono font-medium ${cfg.color}`}>
+          <span>{cfg.icon}</span>
+          <span>{cfg.label}</span>
+        </span>
+      </div>
     </div>
   );
 }
-
